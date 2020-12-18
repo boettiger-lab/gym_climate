@@ -33,7 +33,6 @@ class DICE(DICEfunctions):
         #TT = np.linspace(2000, 2500, 100, dtype = np.int32)
         self.t = t
         super().__init__(t=self.t)
-
         self.InitializeLabor(self.l, self.t)
         self.InitializeTFP(self.al, self.t)
         self.InitializeGrowthSigma(self.gsig, self.t)

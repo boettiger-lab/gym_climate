@@ -6,7 +6,6 @@ class DICEfunctions(DICEparams):
         super().__init__(t, duration=100)
 
     def InitializeLabor(self, il, iNT):
-        import pdb; pdb.set_trace()
         il[iNT] = il[iNT-1]*(self.popasym / il[iNT-1])**self.popadj
 
 

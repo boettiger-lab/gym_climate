@@ -103,15 +103,20 @@ class DICEparams():
         self.sig0 = self.e0/(self.q0*(1-self.miu0)) #From Eq. 14
         self.lam = self.fco22x/ self.t2xco2 #From Eq. 25
 
-        self.l = np.zeros(self.NT)
-        self.l[0] = self.pop0 #Labor force
-        self.al = np.zeros(self.NT)
-        self.al[0] = self.a0
-        self.gsig = np.zeros(self.NT)
-        self.gsig[0] = self.gsigma1
-        self.sigma = np.zeros(self.NT)
-        self.sigma[0]= self.sig0
         self.times = np.array([self.t-1, self.t])
+        if self.t == 1:
+            self.l = np.zeros(self.NT)
+            self.l[0] = self.pop0 #Labor force
+            self.al = np.zeros(self.NT)
+            self.al[0] = self.a0
+            self.gsig = np.zeros(self.NT)
+            self.gsig[0] = self.gsigma1
+            self.sigma = np.zeros(self.NT)
+            self.sigma[0]= self.sig0
+            self.cost1 = np.zeros(self.NT)
+            self.cumetree = np.zeros(self.NT)
+            self.cumetree[0] = 100
+        
         self.ga = self.ga0 * np.exp(-self.dela*5*(self.times-1)) #TFP growth rate dynamics, Eq. 7
         self.pbacktime = self.pback * (1-self.gback)**(self.times-1) #Backstop price
         self.etree = self.eland0*(1-self.deland)**(self.times-1) #Emissions from deforestration
@@ -123,7 +128,4 @@ class DICEparams():
         else:
             self.forcoth[self.t-1] = self.forcoth[self.t-1] + (1/17)*(self.fex1-self.fex0)*(self.t-1)
         self.optlrsav = (self.dk + .004)/(self.dk + .004*self.elasmu + self.prstp)*self.gama #Optimal long-run savings rate used for transversality (Question)
-        self.cost1 = np.zeros(self.NT)
-        self.cumetree = np.zeros(self.NT)
-        self.cumetree[0] = 100
         self.cpricebase = self.cprice0*(1+self.gcprice)**(5*(self.times-1))
