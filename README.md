@@ -2,7 +2,7 @@
 WIP :construction:
 
 ## Installation
-Run `pip install -e .` from the home directory to have `gym_climate` in your path. A `requirements.txt` is on the way, but I think `pip install gym` should suffice atm.
+Run `pip install -e .` from the home directory to have `gym_climate` in your path. And run `pip install -r requirements.txt` to get the necessary :snake: packages.
 
 ## Environments
 
