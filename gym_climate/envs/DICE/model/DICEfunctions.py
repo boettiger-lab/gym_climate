@@ -199,7 +199,8 @@ class DICEfunctions(DICEparams):
             iCPC[i] = self.fCPC(iC,il,i)
             iPERIODU[i] = self.fPERIODU(iC,il,i)
             iCEMUTOTPER[i] = self.fCEMUTOTPER(iPERIODU,il,i)
-            iRI = self.fRI(iCPC,i)
+            if i > 0:
+                iRI[i-1] = self.fRI(iCPC,i-1) 
             
         resUtility = np.zeros(1)
         self.fUTILITY(iCEMUTOTPER, resUtility)

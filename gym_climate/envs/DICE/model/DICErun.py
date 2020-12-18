@@ -55,4 +55,4 @@ class DICE(DICEfunctions):
             self.cumetree[t_pr], self.MAT[t_pr], self.MU[t_pr], self.ML[t_pr], self.FORC[t_pr], self.TATM[t_pr], \
             self.TOCEAN[t_pr], self.DAMFRAC[t_pr], self.DAMAGES[t_pr], self.ABATECOST[t_pr], self.cost1[t_pr],\
             self.MCABATE[t_pr], self.CPRICE[t_pr], self.YNET[t_pr], self.Y[t_pr], self.C[t_pr], self.CPC[t_pr],\
-            self.PERIODU[t_pr], self.CEMUTOTPER[t_pr], self.RI[t_pr]])
+            self.PERIODU[t_pr], self.CEMUTOTPER[t_pr]])
