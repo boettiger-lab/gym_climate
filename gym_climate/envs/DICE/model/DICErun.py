@@ -50,8 +50,8 @@ class DICE(DICEfunctions):
         return utility
 
     def get_obs(self, t):
-        t_pr = t -1
-        return np.array([self.I[t_pr], self.K[t_pr], self.al[t], self.l[t],\
+        t_pr = t
+        return np.array([self.I[t_pr], self.K[t_pr], self.al[t_pr], self.l[t_pr],\
             self.YGROSS[t_pr], self.sigma[t_pr], self.EIND[t_pr], self.E[t_pr], self.CCA[t_pr], self.CCATOT[t_pr],\
             self.cumetree[t_pr], self.MAT[t_pr], self.MU[t_pr], self.ML[t_pr], self.FORC[t_pr], self.TATM[t_pr], \
             self.TOCEAN[t_pr], self.DAMFRAC[t_pr], self.DAMAGES[t_pr], self.ABATECOST[t_pr], self.cost1[t_pr],\

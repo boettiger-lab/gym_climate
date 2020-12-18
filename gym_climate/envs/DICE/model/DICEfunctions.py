@@ -2,15 +2,16 @@ from numba import njit,guvectorize,float64
 import numpy as np
 from gym_climate.envs.DICE.model.DICEparams import *
 class DICEfunctions(DICEparams):
-    def __init__(self, t=np.array([1]), duration=100):
-        super().__init__(t=np.array([1]), duration=100)
+    def __init__(self, t, duration=100):
+        super().__init__(t, duration=100)
 
     def InitializeLabor(self, il, iNT):
+        import pdb; pdb.set_trace()
         il[iNT] = il[iNT-1]*(self.popasym / il[iNT-1])**self.popadj
 
 
     def InitializeTFP(self, ial, iNT):
-        ial[iNT] = ial[iNT-1]/(1-self.ga[iNT-1])
+        ial[iNT] = ial[iNT-1]/(1-self.ga[0])
         
         
     def InitializeGrowthSigma(self, igsig, iNT):
@@ -23,7 +24,7 @@ class DICEfunctions(DICEparams):
         
        
     def InitializeCarbonTree(self, icumetree, iNT):
-        icumetree[iNT] = icumetree[iNT-1] + self.etree[iNT-1]*(5/3.666)
+        icumetree[iNT] = icumetree[iNT-1] + self.etree[0]*(5/3.666)
 
     """
     Functions of the model
@@ -35,7 +36,7 @@ class DICEfunctions(DICEparams):
 
     # Retuns the total carbon emissions; Eq. 18
     def fE(self, iEIND, index):
-        return iEIND[index] + self.etree[0]
+        return iEIND[index] + self.etree[1]
 
     #Eq.14: Determines the emission of carbon by industry EIND
     def fEIND(self, iYGROSS, iMIU, isigma, index):

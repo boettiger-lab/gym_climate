@@ -10,16 +10,15 @@ class EnvDICE(gym.Env):
         self.t = 1 # first observation is at t=0, first action at t=1 
         self.done = False
         self.action_space = spaces.Box(low=-1, high=1, shape=(2,), dtype=np.float32)
-        # Skeleton obs space, need to think more about what to do here
         self.observation_space = spaces.Box(low=-10**(-6), high=10**(6), shape=(30,), dtype=np.float32)
 
     def step(self, action):
         assert action in self.action_space, f"Error: {action} is an invalid action"
-        self.unnormalized_action = (action+1) / 2
-
-        self.reward = self.DICE.integrate(self.unnormalized_action, self.t)
-        self.t += 1
+        self.action = (action+1) / 2
+        import pdb; pdb.set_trace()
+        self.reward = self.DICE.integrate(self.action, self.t)
         self.state = self.DICE.get_obs(self.t)
+        self.t += 1
         if self.t == 101:
             self.done = True
 

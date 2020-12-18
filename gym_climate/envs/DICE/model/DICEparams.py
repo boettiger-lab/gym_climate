@@ -1,7 +1,7 @@
 import numpy as np
 from numba.experimental import jitclass
 class DICEparams():
-    def __init__(self, t=np.array([1]), duration=100):
+    def __init__(self, t, duration=100):
         #Set
         self.t = t
         self.NT = duration
@@ -111,18 +111,19 @@ class DICEparams():
         self.gsig[0] = self.gsigma1
         self.sigma = np.zeros(self.NT)
         self.sigma[0]= self.sig0
-        self.ga = self.ga0 * np.exp(-self.dela*5*(self.t-1)) #TFP growth rate dynamics, Eq. 7
-        self.pbacktime = self.pback * (1-self.gback)**(self.t-1) #Backstop price
-        self.etree = self.eland0*(1-self.deland)**(self.t-1) #Emissions from deforestration
-        self.rr = 1/((1+self.prstp)**(self.tstep*(self.t-1))) #Eq. 3
+        self.times = np.array([self.t-1, self.t])
+        self.ga = self.ga0 * np.exp(-self.dela*5*(self.times-1)) #TFP growth rate dynamics, Eq. 7
+        self.pbacktime = self.pback * (1-self.gback)**(self.times-1) #Backstop price
+        self.etree = self.eland0*(1-self.deland)**(self.times-1) #Emissions from deforestration
+        self.rr = 1/((1+self.prstp)**(self.tstep*(self.times-1))) #Eq. 3
         #The following three equations define the exogenous radiative forcing; used in Eq. 23  
         self.forcoth = np.full(self.NT,self.fex0)
-        if self.t[-1] > 19:
-            self.forcoth[self.t[-1]-1] = self.forcoth[self.t[-1]-1] + (self.fex1-self.fex0)
+        if self.t > 19:
+            self.forcoth[self.t-1] = self.forcoth[self.t-1] + (self.fex1-self.fex0)
         else:
-            self.forcoth[self.t[-1]-1] = self.forcoth[self.t[-1]-1] + (1/17)*(self.fex1-self.fex0)*(self.t[-1]-1)
+            self.forcoth[self.t-1] = self.forcoth[self.t-1] + (1/17)*(self.fex1-self.fex0)*(self.t-1)
         self.optlrsav = (self.dk + .004)/(self.dk + .004*self.elasmu + self.prstp)*self.gama #Optimal long-run savings rate used for transversality (Question)
         self.cost1 = np.zeros(self.NT)
         self.cumetree = np.zeros(self.NT)
         self.cumetree[0] = 100
-        self.cpricebase = self.cprice0*(1+self.gcprice)**(5*(self.t[-1]-1))
+        self.cpricebase = self.cprice0*(1+self.gcprice)**(5*(self.times-1))
