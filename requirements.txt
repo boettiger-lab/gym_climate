@@ -1,0 +1,21 @@
+cloudpickle==1.6.0
+cycler==0.10.0
+future==0.18.2
+gym==0.17.3
+-e git+git@github.com:boettiger-lab/gym_climate.git@4ce692a4a0dfeb87ce64bcbe238be241c119caf2#egg=gym_climate
+kiwisolver==1.3.1
+llvmlite==0.35.0
+matplotlib==3.3.3
+numba==0.52.0
+numpy==1.19.4
+pandas==1.1.5
+Pillow==8.0.1
+pyglet==1.5.0
+pyparsing==2.4.7
+python-dateutil==2.8.1
+pytz==2020.4
+scipy==1.5.4
+six==1.15.0
+stable-baselines3==0.10.0
+torch==1.7.1
+typing-extensions==3.7.4.3
