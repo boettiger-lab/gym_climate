@@ -76,7 +76,7 @@ class DICEparams():
         self.a3  = 2.00 #      Damage exponent                              /2.00   /
 
         #** Abatement cost
-        self.expcost2 = 2.6 # Theta2 in the model, Eq. 10 Exponent of control cost function             / 2.6  /
+        self.expcost2 = 2.6 # Theta2 Exponent of control cost function             / 2.6  /
         self.pback  = 550 #   Cost of backstop 2010$ per tCO2 2015          / 550  /
         self.gback  = 0.025 #   Initial cost decline backstop cost per period / .025/
         self.limmiu  = 1.2 #  Upper limit on control rate after 2150        / 1.2 /
@@ -100,8 +100,8 @@ class DICEparams():
 
         #* Further definitions of parameters
         self.a20 = self.a2
-        self.sig0 = self.e0/(self.q0*(1-self.miu0)) #From Eq. 14
-        self.lam = self.fco22x/ self.t2xco2 #From Eq. 25
+        self.sig0 = self.e0/(self.q0*(1-self.miu0))
+        self.lam = self.fco22x/ self.t2xco2
 
         self.times = np.array([self.t-1, self.t])
         if self.t == 1:
@@ -116,12 +116,12 @@ class DICEparams():
             self.cost1 = np.zeros(self.NT)
             self.cumetree = np.zeros(self.NT)
             self.cumetree[0] = 100
-        
-        self.ga = self.ga0 * np.exp(-self.dela*5*(self.times-1)) #TFP growth rate dynamics, Eq. 7
+
+        self.ga = self.ga0 * np.exp(-self.dela*5*(self.times-1)) #TFP growth rate dynamics
         self.pbacktime = self.pback * (1-self.gback)**(self.times-1) #Backstop price
         self.etree = self.eland0*(1-self.deland)**(self.times-1) #Emissions from deforestration
-        self.rr = 1/((1+self.prstp)**(self.tstep*(self.times-1))) #Eq. 3
-        #The following three equations define the exogenous radiative forcing; used in Eq. 23  
+        self.rr = 1/((1+self.prstp)**(self.tstep*(self.times-1)))
+        #The following three equations define the exogenous radiative forcing  
         self.forcoth = np.full(self.NT,self.fex0)
         if self.t > 19:
             self.forcoth[self.t-1] = self.forcoth[self.t-1] + (self.fex1-self.fex0)

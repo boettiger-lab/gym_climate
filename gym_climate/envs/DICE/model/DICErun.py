@@ -32,6 +32,7 @@ class DICE(DICEfunctions):
     def integrate(self, action, t):
         #TT = np.linspace(2000, 2500, 100, dtype = np.int32)
         self.t = t
+        # Update the dynamic parameters
         super().__init__(t=self.t)
         self.InitializeLabor(self.l, self.t)
         self.InitializeTFP(self.al, self.t)
@@ -39,20 +40,22 @@ class DICE(DICEfunctions):
         self.InitializeSigma(self.sigma, self.gsig, self.cost1, self.t)
         self.InitializeCarbonTree(self.cumetree, self.t)
 
+        # Evaluate the utility function
         utility = self.fOBJ(action, 1.0, self.I, self.K, self.al, self.l,\
             self.YGROSS, self.sigma, self.EIND, self.E, self.CCA, self.CCATOT,\
             self.cumetree, self.MAT, self.MU, self.ML, self.FORC, self.TATM, \
             self.TOCEAN, self.DAMFRAC, self.DAMAGES, self.ABATECOST, self.cost1,\
             self.MCABATE, self.CPRICE, self.YNET, self.Y, self.C, self.CPC,\
             self.PERIODU, self.CEMUTOTPER, self.RI, self.t)
-        
+
         return utility
 
     def get_obs(self, t):
-        t_pr = t
-        return np.array([self.I[t_pr], self.K[t_pr], self.al[t_pr], self.l[t_pr],\
-            self.YGROSS[t_pr], self.sigma[t_pr], self.EIND[t_pr], self.E[t_pr], self.CCA[t_pr], self.CCATOT[t_pr],\
-            self.cumetree[t_pr], self.MAT[t_pr], self.MU[t_pr], self.ML[t_pr], self.FORC[t_pr], self.TATM[t_pr], \
-            self.TOCEAN[t_pr], self.DAMFRAC[t_pr], self.DAMAGES[t_pr], self.ABATECOST[t_pr], self.cost1[t_pr],\
-            self.MCABATE[t_pr], self.CPRICE[t_pr], self.YNET[t_pr], self.Y[t_pr], self.C[t_pr], self.CPC[t_pr],\
-            self.PERIODU[t_pr], self.CEMUTOTPER[t_pr]])
+        # Returns all the observables. 
+        # Definitely some room here to reduce the observation space size.
+        return np.array([self.I[t], self.K[t], self.al[t], self.l[t],\
+            self.YGROSS[t], self.sigma[t], self.EIND[t], self.E[t], self.CCA[t], self.CCATOT[t],\
+            self.cumetree[t], self.MAT[t], self.MU[t], self.ML[t], self.FORC[t], self.TATM[t], \
+            self.TOCEAN[t], self.DAMFRAC[t], self.DAMAGES[t], self.ABATECOST[t], self.cost1[t],\
+            self.MCABATE[t], self.CPRICE[t], self.YNET[t], self.Y[t], self.C[t], self.CPC[t],\
+            self.PERIODU[t], self.CEMUTOTPER[t]])

@@ -1,6 +1,7 @@
 from numba import njit,guvectorize,float64
 import numpy as np
 from gym_climate.envs.DICE.model.DICEparams import *
+
 class DICEfunctions(DICEparams):
     def __init__(self, t, duration=100):
         super().__init__(t, duration=100)
@@ -11,17 +12,17 @@ class DICEfunctions(DICEparams):
 
     def InitializeTFP(self, ial, iNT):
         ial[iNT] = ial[iNT-1]/(1-self.ga[0])
-        
-        
+
+
     def InitializeGrowthSigma(self, igsig, iNT):
         igsig[iNT] = igsig[iNT-1]*((1+self.dsig)**self.tstep)
-        
-   
+
+
     def InitializeSigma(self, isigma, igsig, icost1, iNT):
         isigma[iNT] =  isigma[iNT-1] * np.exp(igsig[iNT-1] * self.tstep)
         icost1[iNT] = self.pbacktime[0] * isigma[iNT]  / self.expcost2 /1000
-        
-       
+
+
     def InitializeCarbonTree(self, icumetree, iNT):
         icumetree[iNT] = icumetree[iNT-1] + self.etree[0]*(5/3.666)
 
