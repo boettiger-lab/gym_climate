@@ -4,8 +4,10 @@ import numpy as np
 from stable_baselines3.common.env_checker import check_env
 
 env = gym.make('dice-v0')
-check_env(env)
 obs = env.reset()
+rewards = 0
 for i in range(99):
-    x,y,z,q = env.step(np.array([-0.9, -0.5]))
-    print(y)
+    state,reward,done,_ = env.step(np.array([-1, -1]))
+    rewards += reward
+    print(reward)
+print(rewards)

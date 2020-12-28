@@ -9,19 +9,15 @@ class DICEfunctions(DICEparams):
     def InitializeLabor(self, il, iNT):
         il[iNT] = il[iNT-1]*(self.popasym / il[iNT-1])**self.popadj
 
-
     def InitializeTFP(self, ial, iNT):
         ial[iNT] = ial[iNT-1]/(1-self.ga[0])
-
 
     def InitializeGrowthSigma(self, igsig, iNT):
         igsig[iNT] = igsig[iNT-1]*((1+self.dsig)**self.tstep)
 
-
     def InitializeSigma(self, isigma, igsig, icost1, iNT):
         isigma[iNT] =  isigma[iNT-1] * np.exp(igsig[iNT-1] * self.tstep)
         icost1[iNT] = self.pbacktime[0] * isigma[iNT]  / self.expcost2 /1000
-
 
     def InitializeCarbonTree(self, icumetree, iNT):
         icumetree[iNT] = icumetree[iNT-1] + self.etree[0]*(5/3.666)
@@ -200,9 +196,10 @@ class DICEfunctions(DICEparams):
             iCPC[i] = self.fCPC(iC,il,i)
             iPERIODU[i] = self.fPERIODU(iC,il,i)
             iCEMUTOTPER[i] = self.fCEMUTOTPER(iPERIODU,il,i)
+            # Made some changes here to iRI from pyDICE to be defined recursively 
+            # rather than at once
             if i > 0:
-                iRI[i-1] = self.fRI(iCPC,i-1) 
-            
+                iRI[i-1] = self.fRI(iCPC,i-1)
         resUtility = np.zeros(1)
         self.fUTILITY(iCEMUTOTPER, resUtility)
         
