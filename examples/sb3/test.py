@@ -7,7 +7,7 @@ env = gym.make('dice-v0')
 obs = env.reset()
 rewards = 0
 for i in range(99):
-    state,reward,done,_ = env.step(np.array([-1, -1]))
+    state,reward,done,_ = env.step(np.array([0, 0]))
     rewards += reward
     print(reward)
 print(rewards)

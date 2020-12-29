@@ -1,6 +1,7 @@
 from numba import njit,guvectorize,float64
 import numpy as np
 from gym_climate.envs.DICE.model.DICEparams import *
+import pdb
 
 class DICEfunctions(DICEparams):
     def __init__(self, t, duration=100):
@@ -32,7 +33,11 @@ class DICEfunctions(DICEparams):
 
     # Retuns the total carbon emissions; Eq. 18
     def fE(self, iEIND, index):
-        return iEIND[index] + self.etree[1]
+        import pdb; pdb.set_trace()
+        flag=1
+        if index == 0:
+            flag = 0
+        return iEIND[index] + self.etree[flag]
 
     #Eq.14: Determines the emission of carbon by industry EIND
     def fEIND(self, iYGROSS, iMIU, isigma, index):
@@ -75,6 +80,7 @@ class DICEfunctions(DICEparams):
         if(index == 0):
             return self.mat0
         else:
+            import pdb; pdb.set_trace()
             return iMAT[index-1]*self.b11 + iMU[index-1]*self.b21 + iE[index-1] * 5 / 3.666
 
     #Eq. 21: Dynamics of the carbon concentration in the ocean LOW level
@@ -89,6 +95,7 @@ class DICEfunctions(DICEparams):
         if(index == 0):
             return self.mu0
         else:
+            import pdb; pdb.set_trace()
             return iMAT[index-1]*self.b12 + iMU[index-1]*self.b22 + iML[index-1]*self.b32
 
     #Eq. 23: Dynamics of the atmospheric temperature
@@ -146,7 +153,11 @@ class DICEfunctions(DICEparams):
 
     #Periodic utility: A form of Eq. 2
     def fCEMUTOTPER(self, iPERIODU, il, index):
-        return iPERIODU[index] * il[index] * self.rr[0]
+        pdb.set_trace()
+        flag=1
+        if index == 0:
+            flag=0
+        return iPERIODU[index] * il[index] * self.rr[flag]
 
     #The term between brackets in Eq. 2
     def fPERIODU(self, iC, il, index):
@@ -172,6 +183,7 @@ class DICEfunctions(DICEparams):
 
 
         for i in times:
+            import pdb; pdb.set_trace()
             iK[i] = self.fK(iK,iI,i)
             iYGROSS[i] = self.fYGROSS(ial,il,iK,i)
             iEIND[i] = self.fEIND(iYGROSS, iMIU, isigma,i)
