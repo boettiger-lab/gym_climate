@@ -2,6 +2,7 @@ from numba import njit,guvectorize,float64
 import numpy as np
 from gym_climate.envs.DICE.model.DICEparams import *
 import pdb
+import csv
 
 class DICEfunctions(DICEparams):
     def __init__(self, t, duration=100):
@@ -18,7 +19,7 @@ class DICEfunctions(DICEparams):
 
     def InitializeSigma(self, isigma, igsig, icost1, iNT):
         isigma[iNT] =  isigma[iNT-1] * np.exp(igsig[iNT-1] * self.tstep)
-        icost1[iNT] = self.pbacktime[0] * isigma[iNT]  / self.expcost2 /1000
+        icost1[iNT] = self.pbacktime[1] * isigma[iNT]  / self.expcost2 /1000
 
     def InitializeCarbonTree(self, icumetree, iNT):
         icumetree[iNT] = icumetree[iNT-1] + self.etree[0]*(5/3.666)
@@ -33,7 +34,6 @@ class DICEfunctions(DICEparams):
 
     # Retuns the total carbon emissions; Eq. 18
     def fE(self, iEIND, index):
-        import pdb; pdb.set_trace()
         flag=1
         if index == 0:
             flag = 0
@@ -69,18 +69,23 @@ class DICEfunctions(DICEparams):
 
     #Marginal Abatement cost
     def fMCABATE(self, iMIU, index):
-        return self.pbacktime[0] * iMIU**(self.expcost2-1)
+        flag=1
+        if index == 0:
+            flag = 0
+        return self.pbacktime[flag] * iMIU**(self.expcost2-1)
 
     #Price of carbon reduction
     def fCPRICE(self, iMIU, index):
-        return self.pbacktime[0] * (iMIU)**(self.expcost2-1)
+        flag=1
+        if index == 0:
+            flag = 0
+        return self.pbacktime[flag] * (iMIU)**(self.expcost2-1)
 
     #Eq. 19: Dynamics of the carbon concentration in the atmosphere 
     def fMAT(self, iMAT, iMU, iE, index):
         if(index == 0):
             return self.mat0
         else:
-            import pdb; pdb.set_trace()
             return iMAT[index-1]*self.b11 + iMU[index-1]*self.b21 + iE[index-1] * 5 / 3.666
 
     #Eq. 21: Dynamics of the carbon concentration in the ocean LOW level
@@ -95,7 +100,6 @@ class DICEfunctions(DICEparams):
         if(index == 0):
             return self.mu0
         else:
-            import pdb; pdb.set_trace()
             return iMAT[index-1]*self.b12 + iMU[index-1]*self.b22 + iML[index-1]*self.b32
 
     #Eq. 23: Dynamics of the atmospheric temperature
@@ -153,7 +157,6 @@ class DICEfunctions(DICEparams):
 
     #Periodic utility: A form of Eq. 2
     def fCEMUTOTPER(self, iPERIODU, il, index):
-        pdb.set_trace()
         flag=1
         if index == 0:
             flag=0
@@ -171,7 +174,7 @@ class DICEfunctions(DICEparams):
     #It returns the utility as scalar
     def fOBJ(self, action, sign, iI, iK, ial, il, iYGROSS, isigma, iEIND, iE, iCCA, iCCATOT, icumetree,\
              iMAT, iMU, iML, iFORC, iTATM, iTOCEAN, iDAMFRAC, iDAMAGES, iABATECOST, icost1,\
-             iMCABATE, iCPRICE, iYNET, iY, iC, iCPC, iPERIODU, iCEMUTOTPER, iRI, iNT):
+             iMCABATE, iCPRICE, iYNET, iY, iC, iCPC, iPERIODU, iCEMUTOTPER, iRI, iNT, test_flag):
         
         iMIU = action[0]
         iS = action[1]
@@ -183,7 +186,6 @@ class DICEfunctions(DICEparams):
 
 
         for i in times:
-            import pdb; pdb.set_trace()
             iK[i] = self.fK(iK,iI,i)
             iYGROSS[i] = self.fYGROSS(ial,il,iK,i)
             iEIND[i] = self.fEIND(iYGROSS, iMIU, isigma,i)
@@ -212,6 +214,23 @@ class DICEfunctions(DICEparams):
             # rather than at once
             if i > 0:
                 iRI[i-1] = self.fRI(iCPC,i-1)
+
+        # DEBUGGING SECTION
+        if iNT == 99 and test_flag:
+            myfile = open('parameter_check.csv')
+            rows = []
+            reader = csv.reader(myfile)
+            for row in reader:
+                rows.append(row[0].split('\t'))
+            for i, parameter in enumerate([iK, iYGROSS, iEIND, iE, iCCA,\
+                     iCCATOT, iMAT, iML, iMU, iFORC, iTATM, iTOCEAN,\
+                     iDAMFRAC, iDAMAGES, iABATECOST, iMCABATE, iCPRICE, \
+                     iYNET, iY, iI, iC, iCPC, iPERIODU, iCEMUTOTPER]):
+                 test = [float("".join(x.replace('"', '').split(","))) for x in rows[i]]
+                 x = list(map(lambda x: float(str(x)[:8]), list(parameter)))
+                 y = list(map(lambda x: float(str(x)[:8]), list(test)))
+                 assert y == x,  "Model error"
+            myfile.close()
         resUtility = np.zeros(1)
         self.fUTILITY(iCEMUTOTPER, resUtility)
         

@@ -117,8 +117,6 @@ class DICEparams():
             self.cumetree = np.zeros(self.NT)
             self.cumetree[0] = 100
             self.forcoth = np.full(self.NT,self.fex0)
-        if self.t == 98:
-            import pdb; pdb.set_trace()
         self.ga = self.ga0 * np.exp(-self.dela*5*(self.times)) #TFP growth rate dynamics
         self.pbacktime = self.pback * (1-self.gback)**(self.times) #Backstop price
         self.etree = self.eland0*(1-self.deland)**(self.times) #Emissions from deforestration

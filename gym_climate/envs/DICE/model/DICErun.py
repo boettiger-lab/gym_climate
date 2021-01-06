@@ -28,6 +28,7 @@ class DICE(DICEfunctions):
         self.RI = np.zeros(self.NT)
         self.PERIODU = np.zeros(self.NT)
         self.CEMUTOTPER = np.zeros(self.NT)
+        self.test_flag = False
 
     def integrate(self, action, t):
         #TT = np.linspace(2000, 2500, 100, dtype = np.int32)
@@ -46,7 +47,7 @@ class DICE(DICEfunctions):
             self.cumetree, self.MAT, self.MU, self.ML, self.FORC, self.TATM, \
             self.TOCEAN, self.DAMFRAC, self.DAMAGES, self.ABATECOST, self.cost1,\
             self.MCABATE, self.CPRICE, self.YNET, self.Y, self.C, self.CPC,\
-            self.PERIODU, self.CEMUTOTPER, self.RI, self.t)
+            self.PERIODU, self.CEMUTOTPER, self.RI, self.t, self.test_flag)
 
         return utility
 
