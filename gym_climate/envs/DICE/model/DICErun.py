@@ -1,5 +1,8 @@
 import numpy as np
+
 from gym_climate.envs.DICE.model.DICEfunctions import *
+
+
 class DICE(DICEfunctions):
     def __init__(self, t=np.array([1]), duration=100):
         super().__init__(t=np.array([1]), duration=100)
@@ -31,7 +34,7 @@ class DICE(DICEfunctions):
         self.test_flag = False
 
     def integrate(self, action, t):
-        #TT = np.linspace(2000, 2500, 100, dtype = np.int32)
+        # TT = np.linspace(2000, 2500, 100, dtype = np.int32)
         self.t = t
         # Update the dynamic parameters
         super().__init__(t=self.t)
@@ -42,21 +45,78 @@ class DICE(DICEfunctions):
         self.InitializeCarbonTree(self.cumetree, self.t)
 
         # Evaluate the utility function
-        utility = self.fOBJ(action, 1.0, self.I, self.K, self.al, self.l,\
-            self.YGROSS, self.sigma, self.EIND, self.E, self.CCA, self.CCATOT,\
-            self.cumetree, self.MAT, self.MU, self.ML, self.FORC, self.TATM, \
-            self.TOCEAN, self.DAMFRAC, self.DAMAGES, self.ABATECOST, self.cost1,\
-            self.MCABATE, self.CPRICE, self.YNET, self.Y, self.C, self.CPC,\
-            self.PERIODU, self.CEMUTOTPER, self.RI, self.t, self.test_flag)
+        utility = self.fOBJ(
+            action,
+            1.0,
+            self.I,
+            self.K,
+            self.al,
+            self.l,
+            self.YGROSS,
+            self.sigma,
+            self.EIND,
+            self.E,
+            self.CCA,
+            self.CCATOT,
+            self.cumetree,
+            self.MAT,
+            self.MU,
+            self.ML,
+            self.FORC,
+            self.TATM,
+            self.TOCEAN,
+            self.DAMFRAC,
+            self.DAMAGES,
+            self.ABATECOST,
+            self.cost1,
+            self.MCABATE,
+            self.CPRICE,
+            self.YNET,
+            self.Y,
+            self.C,
+            self.CPC,
+            self.PERIODU,
+            self.CEMUTOTPER,
+            self.RI,
+            self.t,
+            self.test_flag,
+        )
 
         return utility
 
     def get_obs(self, t):
-        # Returns all the observables. 
+        # Returns all the observables.
         # Definitely some room here to reduce the observation space size.
-        return np.array([self.I[t], self.K[t], self.al[t], self.l[t],\
-            self.YGROSS[t], self.sigma[t], self.EIND[t], self.E[t], self.CCA[t], self.CCATOT[t],\
-            self.cumetree[t], self.MAT[t], self.MU[t], self.ML[t], self.FORC[t], self.TATM[t], \
-            self.TOCEAN[t], self.DAMFRAC[t], self.DAMAGES[t], self.ABATECOST[t], self.cost1[t],\
-            self.MCABATE[t], self.CPRICE[t], self.YNET[t], self.Y[t], self.C[t], self.CPC[t],\
-            self.PERIODU[t], self.CEMUTOTPER[t]])
+        return np.array(
+            [
+                self.I[t],
+                self.K[t],
+                self.al[t],
+                self.l[t],
+                self.YGROSS[t],
+                self.sigma[t],
+                self.EIND[t],
+                self.E[t],
+                self.CCA[t],
+                self.CCATOT[t],
+                self.cumetree[t],
+                self.MAT[t],
+                self.MU[t],
+                self.ML[t],
+                self.FORC[t],
+                self.TATM[t],
+                self.TOCEAN[t],
+                self.DAMFRAC[t],
+                self.DAMAGES[t],
+                self.ABATECOST[t],
+                self.cost1[t],
+                self.MCABATE[t],
+                self.CPRICE[t],
+                self.YNET[t],
+                self.Y[t],
+                self.C[t],
+                self.CPC[t],
+                self.PERIODU[t],
+                self.CEMUTOTPER[t],
+            ]
+        )
