@@ -1,4 +1,4 @@
-Here I have implemented the [AYS earth systems model](https://arxiv.org/pdf/1706.04542.pdf). Following [https://aip.scitation.org/doi/pdf/10.1063/1.5124673](https://aip.scitation.org/doi/pdf/10.1063/1.5124673), one can access the ays environment as  follows:
+Here I have implemented the [AYS earth systems model](https://arxiv.org/pdf/1706.04542.pdf). Following [Strnad et al.](https://aip.scitation.org/doi/pdf/10.1063/1.5124673), one can access the ays environment as  follows:
 
 `env = gym.make("ays-v0", reward_type="survive", random_reset=False)`
 
