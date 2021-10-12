@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 class AYSEnvironment(gym.Env):
     def __init__(self, reward_type="survive", random_reset=False):
+        # Initializing stuff relevant to the environment
         self.Tmax = 99
         self.random_reset = random_reset
         self.t = 0
@@ -26,7 +27,7 @@ class AYSEnvironment(gym.Env):
         self.reward_type = reward_type
         self.reward_function = self._reward_function(self.reward_type)
 
-        # Parameters (https://github.com/timkittel/ays-model/blob/master/ays_model.py)
+        # AYS model parameters
         self.beta = 0.03
         self.beta_lg = self.beta / 2
         self.epsilon = 147
@@ -38,7 +39,7 @@ class AYSEnvironment(gym.Env):
         self.tau_S = 50
         self.theta = self.beta / 350
 
-        # Planetary boundary oarameters
+        # Planetary boundary parameters
         self.AYS_mid = [240, 7e13, 5e11]
         self.a_PB = self._compactification(345, self.AYS_mid[0])
         self.y_SF = self._compactification(4e13, self.AYS_mid[1])
@@ -54,7 +55,7 @@ class AYSEnvironment(gym.Env):
         self._evolve_system(action, next_t)
         self.t = next_t
 
-        # Get reward
+        # Get the reward
         reward = self.reward_function()
 
         # Check end conditions
@@ -69,6 +70,7 @@ class AYSEnvironment(gym.Env):
         return self.state, reward, self.done, {}
 
     def _evolve_system(self, action, next_t):
+        # Solves the ODE system until the specified time, `next_t`
         parameters = self._get_parameters(action)
         trajectory = odeint(
             ays_rescaled_rhs,
@@ -91,6 +93,7 @@ class AYSEnvironment(gym.Env):
             return reward
 
         def reward_distance_PB():
+            # Gives a reward based on the distance to the planetary boundaries
             a, y, s = self.state
             norm = np.linalg.norm(self.state - self.PB)
             if self._inside_planetary_boundaries():
