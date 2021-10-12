@@ -8,8 +8,9 @@ import matplotlib.pyplot as plt
 
 
 class AYSEnvironment(gym.Env):
-    def __init__(self, reward_type="survive"):
+    def __init__(self, reward_type="survive", random_reset=False):
         self.Tmax = 99
+        self.random_reset = random_reset
         self.t = 0
         self.dt = 1
         self.done = 0
@@ -165,7 +166,10 @@ class AYSEnvironment(gym.Env):
             return False
 
     def reset(self):
-        self.state = self.init_state
+        if self.random_reset:
+            self.state = np.array([random.random() for i in range(3)])
+        else:
+            self.state = self.init_state
         return self.state
 
     def render(self, mode="human"):
