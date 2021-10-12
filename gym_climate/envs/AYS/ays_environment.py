@@ -7,10 +7,10 @@ from scipy.integrate import odeint
 
 class AYSEnvironment(gym.Env):
     def __init__(self, reward_type="survive"):
-        self.t_max = 0
+        self.t_max = 99
         self.t = 0
-        self.dt = 0
-        self.done = 99
+        self.dt = 1
+        self.done = 0
         self.final_radius = 0.05
         self.init_state = np.array([0.5, 0.5, 0.5])
         self.state = self.init_state
@@ -69,6 +69,7 @@ class AYSEnvironment(gym.Env):
             args=parameters[0],
             mxstep=50000,
         )
+        
         self.state = np.array([trajectory[:, i][-1] for i in range(3)])
     
     def _reward_function(self, name):
