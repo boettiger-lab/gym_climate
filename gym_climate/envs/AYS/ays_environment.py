@@ -1,7 +1,7 @@
 import gym
 from gym import spaces
 import numpy as np
-from ays_model import ays_rescaled_rhs
+from gym_climate.envs.AYS.ays_model import ays_rescaled_rhs
 from scipy.integrate import odeint
 from pandas import DataFrame
 import matplotlib.pyplot as plt
