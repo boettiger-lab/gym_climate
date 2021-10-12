@@ -69,7 +69,7 @@ class AYSEnvironment(gym.Env):
             args=parameters[0],
             mxstep=50000,
         )
-        
+
         self.state = np.array([trajectory[:, i][-1] for i in range(3)])
     
     def _reward_function(self, name):
@@ -104,9 +104,9 @@ class AYSEnvironment(gym.Env):
                 self.phi,
                 self.rho,
                 self.sigma_et if action[1] else self.sigma,
-                self.theta,
                 self.tau_A,
                 self.tau_S,
+                self.theta,
             )
         ]
         return parameter_list
