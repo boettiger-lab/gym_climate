@@ -7,7 +7,6 @@ from pandas import DataFrame
 import matplotlib.pyplot as plt
 
 
-
 class AYSEnvironment(gym.Env):
     def __init__(self, reward_type="survive"):
         self.Tmax = 99
@@ -53,10 +52,10 @@ class AYSEnvironment(gym.Env):
         # Solve the ode's
         self._evolve_system(action, next_t)
         self.t = next_t
-        
+
         # Get reward
         reward = self.reward_function()
-        
+
         # Check end conditions
         if self._arrived_at_final_state():
             self.done = True
@@ -174,7 +173,7 @@ class AYSEnvironment(gym.Env):
 
     def close(self):
         pass
-    
+
     def simulate_mdp(self, model, reps=1):
         row = []
         for rep in range(reps):
@@ -184,33 +183,50 @@ class AYSEnvironment(gym.Env):
             for t in range(self.Tmax):
                 # record
                 row.append([t, self.state, action, reward, int(rep)])
-    
+
                 # Predict and implement action
                 action, _state = model.predict(obs, deterministic=True)
                 obs, reward, done, info = self.step(action)
-    
+
                 if done:
                     break
             row.append([t, self.state, action, reward, int(rep)])
-        df = DataFrame(row, columns=["time", "state", "action", "reward", "rep"])
+        df = DataFrame(
+            row, columns=["time", "state", "action", "reward", "rep"]
+        )
         return df
-    
+
     def plot_mdp(self, df, output="results.png"):
         df.loc[df.action.map(tuple) == tuple([0, 0]), "action"] = "Null"
         df.loc[df.action.map(tuple) == tuple([1, 0]), "action"] = "LG"
         df.loc[df.action.map(tuple) == tuple([0, 1]), "action"] = "ET"
         df.loc[df.action.map(tuple) == tuple([1, 1]), "action"] = "LG+ET"
-        
+
         fig, axs = plt.subplots(3, 1)
         for i in np.unique(df.rep):
             results = df[df.rep == i]
             episode_reward = np.cumsum(results.reward)
-            axs[0].plot(results.time, results.state.apply(lambda x: x[0]), color="black", alpha=0.3)
-            axs[0].plot(results.time, results.state.apply(lambda x: x[1]), color="green", alpha=0.3)
-            axs[0].plot(results.time, results.state.apply(lambda x: x[2]), color="blue", alpha=0.3)
+            axs[0].plot(
+                results.time,
+                results.state.apply(lambda x: x[0]),
+                color="black",
+                alpha=0.3,
+            )
+            axs[0].plot(
+                results.time,
+                results.state.apply(lambda x: x[1]),
+                color="green",
+                alpha=0.3,
+            )
+            axs[0].plot(
+                results.time,
+                results.state.apply(lambda x: x[2]),
+                color="blue",
+                alpha=0.3,
+            )
             axs[1].plot(results.time, results.action, color="blue", alpha=0.3)
             axs[2].plot(results.time, episode_reward, color="blue", alpha=0.3)
-    
+
         axs[0].set_ylabel("state")
         axs[1].set_ylabel("action")
         axs[2].set_ylabel("reward")
