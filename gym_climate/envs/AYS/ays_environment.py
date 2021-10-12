@@ -71,16 +71,15 @@ class AYSEnvironment(gym.Env):
         )
 
         self.state = np.array([trajectory[:, i][-1] for i in range(3)])
-    
+
     def _reward_function(self, name):
-        
         def reward_survive():
             if self._inside_planetary_boundaries():
                 reward = 1.0
             else:
                 reward = -0.0000000000000001
             return reward
-    
+
         def reward_distance_PB():
             a, y, s = self.state
             norm = np.linalg.norm(self.state - self.PB)
@@ -90,7 +89,7 @@ class AYSEnvironment(gym.Env):
                 reward = 0.0
             reward *= norm
             return reward
-        
+
         if self.reward_type == "survive":
             return reward_survive
         elif self.reward_type == "distance":
