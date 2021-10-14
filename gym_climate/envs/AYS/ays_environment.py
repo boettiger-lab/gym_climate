@@ -14,7 +14,7 @@ class AYSEnvironment(gym.Env):
         self.random_reset = random_reset
         self.t = 0
         self.dt = 1
-        self.done = 0
+        self.done = False
         self.final_radius = 0.05
         self.init_state = np.array([0.5, 0.5, 0.5])
         self.state = self.init_state
@@ -204,6 +204,7 @@ class AYSEnvironment(gym.Env):
         return df
 
     def plot_mdp(self, df, output="results.png"):
+        # Converting multibinary actions to strings
         df.loc[df.action.map(tuple) == tuple([0, 0]), "action"] = "Null"
         df.loc[df.action.map(tuple) == tuple([1, 0]), "action"] = "LG"
         df.loc[df.action.map(tuple) == tuple([0, 1]), "action"] = "ET"
