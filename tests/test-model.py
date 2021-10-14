@@ -57,8 +57,6 @@ for i in range(10):
 
     # RUNNING DICE ENV
     env = gym.make("dice-v0")
-
-    env = gym.make("dice-v0")
     check_env(env)
     env.test_flag = True
     obs = env.reset()
