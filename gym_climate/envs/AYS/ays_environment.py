@@ -18,7 +18,7 @@ class AYSEnvironment(gym.Env):
         self.final_radius = 0.05
         self.init_state = np.array([0.5, 0.5, 0.5])
         self.state = self.init_state
-        self.action_space = spaces.MultiBinary(2)
+        self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Box(
             low=np.array([0.0, 0.0, 0.0]),
             high=np.array([1.0, 1.0, 1.0]),
@@ -111,11 +111,11 @@ class AYSEnvironment(gym.Env):
     def _get_parameters(self, action):
         parameter_list = [
             (
-                self.beta_lg if action[0] else self.beta,
+                self.beta_lg if action == 1 or action == 3 else self.beta,
                 self.epsilon,
                 self.phi,
                 self.rho,
-                self.sigma_et if action[1] else self.sigma,
+                self.sigma_et if action == 2 or action == 3 else self.sigma,
                 self.tau_A,
                 self.tau_S,
                 self.theta,
@@ -185,7 +185,7 @@ class AYSEnvironment(gym.Env):
         row = []
         for rep in range(reps):
             obs = self.reset()
-            action = [0, 0]
+            action = 0
             reward = 0.0
             for t in range(self.Tmax):
                 # record
@@ -205,11 +205,12 @@ class AYSEnvironment(gym.Env):
 
     def plot_mdp(self, df, output="results.png"):
         # Converting multibinary actions to strings
-        df.loc[df.action.map(tuple) == tuple([0, 0]), "action"] = "Null"
-        df.loc[df.action.map(tuple) == tuple([1, 0]), "action"] = "LG"
-        df.loc[df.action.map(tuple) == tuple([0, 1]), "action"] = "ET"
-        df.loc[df.action.map(tuple) == tuple([1, 1]), "action"] = "LG+ET"
-
+        df.loc[df.action == 0, "action"] = "Null"
+        df.loc[df.action == 1, "action"] = "LG"
+        df.loc[df.action == 2, "action"] = "ET"
+        df.loc[df.action == 3, "action"] = "LG+ET"
+        import pdb; pdb.set_trace()
+        
         fig, axs = plt.subplots(3, 1)
         for i in np.unique(df.rep):
             results = df[df.rep == i]
