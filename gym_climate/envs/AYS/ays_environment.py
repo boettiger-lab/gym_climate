@@ -66,7 +66,6 @@ class AYSEnvironment(gym.Env):
         if not self._inside_planetary_boundaries():
             self.done = True
             reward = 0
-
         return self.state, reward, self.done, {}
 
     def _evolve_system(self, action, next_t):
@@ -173,6 +172,8 @@ class AYSEnvironment(gym.Env):
             self.state = np.array([random.random() for i in range(3)])
         else:
             self.state = self.init_state
+        self.t = 0
+        self.done = False
         return self.state
 
     def render(self, mode="human"):
@@ -209,8 +210,7 @@ class AYSEnvironment(gym.Env):
         df.loc[df.action == 1, "action"] = "LG"
         df.loc[df.action == 2, "action"] = "ET"
         df.loc[df.action == 3, "action"] = "LG+ET"
-        import pdb; pdb.set_trace()
-        
+
         fig, axs = plt.subplots(3, 1)
         for i in np.unique(df.rep):
             results = df[df.rep == i]
